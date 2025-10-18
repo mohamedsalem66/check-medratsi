@@ -10,7 +10,7 @@ spec:
   tls:
     - hosts:
         - check.medrasti.com
-      secretName: check-front-tls-secret
+      secretName: check-tls-secret
   rules:
     - host: check.medrasti.com
       http:
