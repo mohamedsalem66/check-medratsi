@@ -8,4 +8,4 @@ resources:
     - regcred.yaml
 
 patchesStrategicMerge:
-    - elemana-frontend.yaml
+    - check-frontend.yaml

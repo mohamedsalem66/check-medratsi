@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: elemana-frontend-ingress
+  name: check-frontend-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -9,16 +9,16 @@ metadata:
 spec:
   tls:
     - hosts:
-        - agent.elemanaoptique.com
-      secretName: elemana-front-tls-secret
+        - check.medrasti.com
+      secretName: check-front-tls-secret
   rules:
-    - host: agent.elemanaoptique.com
+    - host: check.medrasti.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: elemana-frontend
+                name: check-frontend
                 port:
                   number: 80

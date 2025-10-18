@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: elemana-frontend
+  name: check-frontend
   labels:
-    app: elemana-frontend
+    app: check-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: elemana-frontend
+      app: check-frontend
   template:
     metadata:
       labels:
-        app: elemana-frontend
+        app: check-frontend
     spec:
       imagePullSecrets:
       - name: regcred
       containers:
-      - name: elemana-frontend
-        image: ghcr.io/mohamedsalem66/elemana-frontend:0.1-SNAPSHOT
+      - name: check-frontend
+        image: ghcr.io/mohamedsalem66/check-frontend:0.1-SNAPSHOT
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -34,12 +34,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: elemana-frontend
+  name: check-frontend
   labels:
-    app: elemana-frontend
+    app: check-frontend
 spec:
   ports:
   - port: 80
     targetPort: 80
   selector:
-    app: elemana-frontend
+    app: check-frontend
