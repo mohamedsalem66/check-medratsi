@@ -1,7 +1,7 @@
 bases:
     - ../base
 
-namespace: prestige-optique
+namespace: school-production
 resources:
     - namespace.yaml
     - ingress.yaml
