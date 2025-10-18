@@ -6,11 +6,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
-
+import InvoicePDFFR from './InvoicePDFFR';
+import InvoicePDFAR from './InvoicePDFAR';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import InvoicePDFAR from "./InvoicePDFAR";
-import InvoicePDFFR from "./InvoicePDFFR";
 
 interface InvoiceDetailsProps {
     language: 'fr' | 'ar';
@@ -46,15 +45,6 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
         fetchInvoice();
     }, [invoiceId]);
 
-    // School information - you can make this dynamic from API if needed
-    const schoolInfo = {
-        name: "École Medrasti",
-        arabicName: "مدرسة مدرستي",
-        address: "Nouakchott, Mauritanie",
-        tel: "+222 1234 5678",
-        whatsapp: "+222 1234 5678"
-    };
-
     if (isLoading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -79,14 +69,21 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
         );
     }
 
-    // Choose the appropriate PDF component based on language
+    // Extract school information from the API response
+    const schoolInfo = {
+        name: invoiceData.school?.name || "École",
+        arabicName: invoiceData.school?.arabicName || "مدرسة",
+        address: invoiceData.school?.address?.name || "Nouakchott, Mauritanie",
+        tel: invoiceData.school?.firstTel || "",
+        whatsapp: invoiceData.school?.whatsapp || "",
+        logoUrl: invoiceData.school?.logo?.link || ""
+    };
+
+
     const InvoicePDFComponent = language === 'ar' ? InvoicePDFAR : InvoicePDFFR;
-    const downloadFileName = language === 'ar'
-        ? `فاتورة-${invoiceData.ref}.pdf`
-        : `facture-${invoiceData.ref}.pdf`;
 
     return (
-        <Box sx={{ width: '100%', height: '100vh', position: 'relative' }}>
+        <Box sx={{ width: '100%', height: '100vh', position: 'relative', pedding : '10px' }}>
             <PDFViewer width="100%" height="100%">
                 <InvoicePDFComponent
                     invoiceData={invoiceData}
@@ -98,7 +95,8 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
                     schoolAddress={schoolInfo.address}
                     schoolTel={schoolInfo.tel}
                     schoolWhatsapp={schoolInfo.whatsapp}
-                    generatedAt={new Date()}
+                    logoUrl={schoolInfo.logoUrl}
+                    generatedAt={new Date(invoiceData?.createdAt)}
                 />
             </PDFViewer>
         </Box>

@@ -325,7 +325,7 @@ const InvoicePDFFR: React.FC<InvoicePDFFRProps> = ({
                         <View style={styles.schoolInfo}>
                             <Text style={styles.schoolName}>{schoolName}</Text>
                             {schoolAddress && <Text style={styles.schoolDetails}>{schoolAddress}</Text>}
-                            <View style={{ flexDirection: 'row', gap: 8 }}>
+                            <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
                                 {schoolTel && <Text style={styles.schoolDetails}>Tél: {schoolTel}</Text>}
                                 {schoolWhatsapp && <Text style={styles.schoolDetails}>WhatsApp: {schoolWhatsapp}</Text>}
                             </View>

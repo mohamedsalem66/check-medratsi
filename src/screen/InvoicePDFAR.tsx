@@ -330,8 +330,8 @@ const InvoicePDFAR: React.FC<InvoicePDFARProps> = ({
                             <Text style={styles.schoolName}>{schoolArabicName}</Text>
                             {schoolAddress && <Text style={styles.schoolDetails}>{schoolAddress}</Text>}
                             <View style={{ flexDirection: 'row-reverse', gap: 8 }}>
-                                {schoolTel && <Text style={styles.schoolDetails}>هاتف: {schoolTel}</Text>}
-                                {schoolWhatsapp && <Text style={styles.schoolDetails}>WhatsApp: {schoolWhatsapp}</Text>}
+                                {schoolTel && <Text style={styles.schoolDetails}>الهاتف: {schoolTel}</Text>}
+                                {schoolWhatsapp && <Text style={styles.schoolDetails}>واتساب: {schoolTel}</Text>}
                             </View>
                             <Text style={[styles.schoolDetails, { fontWeight: 'bold', color: '#000', marginTop: 2 }]}>
                                 السنة الدراسية: {year}
