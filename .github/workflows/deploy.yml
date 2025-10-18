@@ -1,4 +1,4 @@
-name: Deploy Elemana Optique on Kubernetes
+name: Deploy Check Medrasti on Kubernetes
 
 on:
   workflow_dispatch:
@@ -59,9 +59,9 @@ jobs:
       - name: Calculate images
         run: |
           git status
-          export TAG_ELEMANA_FRONTEND=$(git ls-files -s . | git hash-object --stdin)
+          export TAG_CHECK_FRONTEND=$(git ls-files -s . | git hash-object --stdin)
           cd k8s/${{github.event.inputs.ENV}}
-          kustomize edit set image ghcr.io/mohamedsalem66/elemana-frontend=ghcr.io/mohamedsalem66/elemana-frontend:$TAG_ELEMANA_FRONTEND
+          kustomize edit set image ghcr.io/mohamedsalem66/check-frontend=ghcr.io/mohamedsalem66/check-frontend:$TAG_CHECK_FRONTEND
 
       - name: Annotate namespaces
         run: |
