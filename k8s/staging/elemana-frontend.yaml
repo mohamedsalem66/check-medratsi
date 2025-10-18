@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elemana-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elemana-frontend
+  template:
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: elemana-frontend
+        image: ghcr.io/mohamedsalem66/elemana-frontend:0.2-SNAPSHOT
+
