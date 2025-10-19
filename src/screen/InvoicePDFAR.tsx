@@ -328,7 +328,6 @@ const InvoicePDFAR: React.FC<InvoicePDFARProps> = ({
                         </View>
                         <View style={styles.schoolInfo}>
                             <Text style={styles.schoolName}>{schoolArabicName}</Text>
-                            {schoolAddress && <Text style={styles.schoolDetails}>{schoolAddress}</Text>}
                             <View style={{ flexDirection: 'row-reverse', gap: 8 }}>
                                 {schoolTel && <Text style={styles.schoolDetails}>الهاتف: {schoolTel}</Text>}
                                 {schoolWhatsapp && <Text style={styles.schoolDetails}>واتساب: {schoolTel}</Text>}
@@ -343,7 +342,7 @@ const InvoicePDFAR: React.FC<InvoicePDFARProps> = ({
 
                 {/* Combined Information Block */}
                 <View style={styles.infoBlock}>
-                    <Text style={[styles.sectionTitle, { marginBottom: 6 }]}>معلومات الطالب</Text>
+                    <Text style={[styles.sectionTitle, { marginBottom: 6 }]}>معلومات التلميذ</Text>
 
                     <View style={styles.infoRow}>
                         <Text style={styles.infoValue}>{student.firstName} {student.lastName}</Text>
