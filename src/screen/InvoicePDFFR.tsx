@@ -359,6 +359,9 @@ const InvoicePDFFR: React.FC<InvoicePDFFRProps> = ({
                         <Text style={styles.infoLabel}>Classe:</Text>
                         <Text style={styles.infoValue}>{schoolClass.name}</Text>
                     </View>
+
+
+                    <Text style={[styles.sectionTitle, { marginTop: 10, marginBottom: 6 }]}>Détails des paiements</Text>
                     <View style={styles.infoRow}>
                         <Text style={styles.infoLabel}>Mode de paiement:</Text>
                         <Text style={styles.infoValue}>{formatPaymentMethod(invoiceData.paymentMethod)}</Text>
@@ -372,8 +375,6 @@ const InvoicePDFFR: React.FC<InvoicePDFFRProps> = ({
                             </Text>
                         </View>
                     )}
-
-                    <Text style={[styles.sectionTitle, { marginTop: 10, marginBottom: 6 }]}>Détails des paiements</Text>
 
                     <View style={styles.paymentTable}>
                         <View style={styles.paymentTableHeader}>

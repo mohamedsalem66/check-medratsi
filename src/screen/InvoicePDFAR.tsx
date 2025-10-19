@@ -353,9 +353,11 @@ const InvoicePDFAR: React.FC<InvoicePDFARProps> = ({
                         <Text style={styles.infoLabel}>: رقم التسجيل</Text>
                     </View>
                     <View style={styles.infoRow}>
-                        <Text style={styles.infoValue}>{schoolClass.arabicName || schoolClass.name}</Text>
+                        <Text style={styles.infoValue}>{schoolClass.name}</Text>
                         <Text style={styles.infoLabel}>: الفصل</Text>
                     </View>
+
+                    <Text style={[styles.sectionTitle, { marginTop: 10, marginBottom: 6 }]}>تفاصيل الدفع</Text>
                     <View style={styles.infoRow}>
                         <Text style={styles.infoValue}>{formatPaymentMethod(invoiceData.paymentMethod)}</Text>
                         <Text style={styles.infoLabel}>: طريقة الدفع</Text>
@@ -364,14 +366,11 @@ const InvoicePDFAR: React.FC<InvoicePDFARProps> = ({
                     {enrollmentPrice > 0 && (
                         <View style={[styles.infoRow, { marginTop: 4, paddingTop: 4, borderTopWidth: 1, borderTopColor: '#e5e7eb' }]}>
                             <Text style={[styles.infoValue, { fontWeight: 'bold', color: '#1e40af' }]}>
-                                {formatCurrency(enrollmentPrice)} أوقية
+                                {formatCurrency(enrollmentPrice)}
                             </Text>
                             <Text style={styles.infoLabel}>: رسوم التسجيل</Text>
                         </View>
                     )}
-
-                    <Text style={[styles.sectionTitle, { marginTop: 10, marginBottom: 6 }]}>تفاصيل الدفع</Text>
-
                     <View style={styles.paymentTable}>
                         <View style={styles.paymentTableHeader}>
                             <Text style={[styles.paymentTableHeaderText, { width: '25%' }]}>الحالة</Text>
