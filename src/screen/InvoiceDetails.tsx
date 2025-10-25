@@ -19,9 +19,9 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
     const [invoiceData, setInvoiceData] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [downloadStatus, setDownloadStatus] = useState<string>('');
-    const [isDownloadComplete, setIsDownloadComplete] = useState<boolean>(false);
-    const hasDownloaded = useRef(false);
+    const [loadingStatus, setLoadingStatus] = useState<string>('');
+    const [pdfUrl, setPdfUrl] = useState<string>('');
+    const hasGenerated = useRef(false);
 
     // Translations
     const messages = {
@@ -30,22 +30,16 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
             fetchingData: 'Récupération des données de la facture...',
             loadError: 'Échec du chargement de la facture. Veuillez vérifier l\'identifiant de la facture.',
             generatingPDF: 'Génération du PDF...',
-            downloading: 'Téléchargement en cours...',
-            downloadComplete: 'Téléchargement terminé ! Vous pouvez fermer cette page.',
             pdfGenerationError: 'Échec de la génération du PDF. Veuillez réessayer.',
             noInvoiceData: 'Aucune donnée de facture trouvée',
-            downloadNotStarted: 'Si le téléchargement n\'a pas démarré automatiquement, veuillez actualiser la page.',
         },
         ar: {
             noInvoiceId: 'لم يتم توفير معرف الفاتورة',
             fetchingData: 'جاري استرجاع بيانات الفاتورة...',
             loadError: 'فشل تحميل الفاتورة. يرجى التحقق من معرف الفاتورة.',
             generatingPDF: 'جاري إنشاء ملف PDF...',
-            downloading: 'جاري التحميل...',
-            downloadComplete: 'اكتمل التحميل! يمكنك إغلاق هذه الصفحة.',
             pdfGenerationError: 'فشل إنشاء ملف PDF. يرجى المحاولة مرة أخرى.',
             noInvoiceData: 'لم يتم العثور على بيانات الفاتورة',
-            downloadNotStarted: 'إذا لم يبدأ التحميل تلقائياً، يرجى تحديث الصفحة.',
         }
     };
 
@@ -63,7 +57,7 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
 
             try {
                 setIsLoading(true);
-                setDownloadStatus(t.fetchingData);
+                setLoadingStatus(t.fetchingData);
                 const response = await getInvoiceById(invoiceId);
                 setInvoiceData(response);
             } catch (error: any) {
@@ -76,13 +70,13 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
     }, [invoiceId, t.noInvoiceId, t.fetchingData, t.loadError]);
 
     useEffect(() => {
-        const downloadPDF = async () => {
-            if (!invoiceData || hasDownloaded.current) return;
+        const generatePDF = async () => {
+            if (!invoiceData || hasGenerated.current) return;
 
-            hasDownloaded.current = true;
+            hasGenerated.current = true;
 
             try {
-                setDownloadStatus(t.generatingPDF);
+                setLoadingStatus(t.generatingPDF);
 
                 // Extract school information
                 const schoolInfo = {
@@ -113,20 +107,9 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
                     />
                 ).toBlob();
 
-                setDownloadStatus(t.downloading);
-
-                // Create download link and trigger download
+                // Create blob URL to display PDF in browser
                 const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `facture_${invoiceId}_${language}.pdf`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-
-                setDownloadStatus(t.downloadComplete);
-                setIsDownloadComplete(true);
+                setPdfUrl(url);
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error generating PDF:', error);
@@ -136,11 +119,20 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
         };
 
         if (invoiceData && isLoading) {
-            downloadPDF();
+            generatePDF();
         }
-    }, [invoiceData, isLoading, invoiceId, language, t.generatingPDF, t.downloading, t.downloadComplete, t.pdfGenerationError]);
+    }, [invoiceData, isLoading, invoiceId, language, t.generatingPDF, t.pdfGenerationError]);
 
-    if (isLoading && !isDownloadComplete) {
+    // Cleanup blob URL on unmount
+    useEffect(() => {
+        return () => {
+            if (pdfUrl) {
+                URL.revokeObjectURL(pdfUrl);
+            }
+        };
+    }, [pdfUrl]);
+
+    if (isLoading) {
         return (
             <Box
                 display="flex"
@@ -152,7 +144,7 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
                 dir={language === 'ar' ? 'rtl' : 'ltr'}
             >
                 <CircularProgress />
-                <Alert severity="info">{downloadStatus}</Alert>
+                <Alert severity="info">{loadingStatus}</Alert>
             </Box>
         );
     }
@@ -185,18 +177,30 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ language }) => {
         );
     }
 
+    // Display PDF in iframe for sharing
     return (
         <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            minHeight="100vh"
-            flexDirection="column"
-            gap={2}
-            dir={language === 'ar' ? 'rtl' : 'ltr'}
+            sx={{
+                width: '100%',
+                height: '100vh',
+                margin: 0,
+                padding: 0,
+                overflow: 'hidden'
+            }}
         >
-            <Alert severity="success">{downloadStatus}</Alert>
-            <Alert severity="info">{t.downloadNotStarted}</Alert>
+            {pdfUrl && (
+                <iframe
+                    src={pdfUrl}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        border: 'none',
+                        margin: 0,
+                        padding: 0,
+                    }}
+                    title="Invoice PDF"
+                />
+            )}
         </Box>
     );
 };
