@@ -309,6 +309,11 @@ const InvoicePDFFR: React.FC<InvoicePDFFRProps> = ({
         return month.frenchName;
     };
 
+    const generateQRCodeUrl = () => {
+        const qrCodeUrl = `https://check.medrasti.com/fr/${invoiceData.id}`;
+        return `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(qrCodeUrl)}`;
+    };
+
 
     const totalAmount = invoiceData.monthInvoiceRelations.reduce((sum: number, payment: any) => sum + payment.totalAmount, 0);
     const totalPaid = invoiceData.monthInvoiceRelations.reduce((sum: number, payment: any) => sum + payment.paidAmount, 0);
@@ -432,6 +437,25 @@ const InvoicePDFFR: React.FC<InvoicePDFFRProps> = ({
                     </View>
                 </View>
 
+                {/* QR Code and Signature Section */}
+                <View style={styles.qrSection}>
+                    {/* QR Code Section */}
+                    <View style={styles.qrContainer}>
+                        <Image
+                            style={styles.qrCode}
+                            src={generateQRCodeUrl()}
+                        />
+                        <Text style={styles.qrText}>
+                            Scannez pour vérifier{'\n'}cette facture en ligne
+                        </Text>
+                    </View>
+
+                    {/* Signature Section */}
+                    <View style={styles.signatureBlock}>
+                        <View style={styles.signatureLine} />
+                        <Text style={styles.signatureText}>Signature du Directeur</Text>
+                    </View>
+                </View>
 
                 {/* Footer */}
                 <View style={styles.footer}>
